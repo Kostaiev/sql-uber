@@ -47,6 +47,15 @@ erDiagram
         INT_UNSIGNED street_id FK
         VARCHAR_20 house_number
     }
+
+    passenger {
+        BIGINT_UNSIGNED id PK
+        VARCHAR_100 first_name
+        VARCHAR_100 last_name
+        VARCHAR_16 phone UK
+        VARCHAR_254 email UK
+        DATETIME created_at
+    }
 ```
 
 
@@ -55,6 +64,7 @@ erDiagram
 - region → city: One-to-Many
 - city → street: One-to-Many
 - street → house: One-to-Many
+- passenger: Independent entity (no relationships yet).
 - Foreign keys use RESTRICT for DELETE and UPDATE.
 
 ## Business Rules
@@ -66,6 +76,9 @@ erDiagram
 - House numbers are unique within a street.
 - Every child entity requires a parent.
 - drivable indicates basic car accessibility.
+- Passenger phone numbers are required, unique, and E.164-formatted.
+- Passenger emails are required and unique.
+- Passenger names must be non-empty.
 
 ## Quick start
 

@@ -9,7 +9,8 @@ TABLE_SQL := \
     db/001_create_region.sql \
     db/002_create_city.sql \
     db/003_create_street.sql \
-    db/004_create_house.sql
+    db/004_create_house.sql \
+	db/005_create_passenger.sql
 
 SEED_SQL := seeds/dev_seed.sql
 
@@ -50,7 +51,8 @@ verify:
 		SELECT c.name AS city, s.name AS street, s.drivable, h.house_number \
 		FROM city c JOIN street s ON s.city_id = c.id \
 		LEFT JOIN house h ON h.street_id = s.id \
-		ORDER BY c.name, s.name, h.house_number;"
+		ORDER BY c.name, s.name, h.house_number; \
+		SELECT COUNT(*) AS passenger_amount FROM passenger;"
 
 setup:
 	@$(MAKE) create-user

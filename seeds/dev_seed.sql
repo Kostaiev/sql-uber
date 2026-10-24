@@ -40,4 +40,9 @@ INSERT INTO house (street_id, house_number) VALUES
     (@kyiv_shevchenka, '10')
 ON DUPLICATE KEY UPDATE id = id;
 
+-- Passengers
+INSERT INTO passenger (first_name, last_name, phone, email) VALUES
+    ('Brunhilde', 'Pompidur', '+12025550101', 'brunhilde@example.com'),
+    ('Carl', NULL, '+12025550102', 'carl@example.com');
+
 COMMIT;
