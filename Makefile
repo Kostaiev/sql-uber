@@ -10,7 +10,15 @@ TABLE_SQL := \
     db/002_create_city.sql \
     db/003_create_street.sql \
     db/004_create_house.sql \
-	db/005_create_passenger.sql
+	db/005_create_passenger.sql \
+	db/006_create_driver.sql \
+	db/007_create_operator.sql \
+	db/008_update_passenger.sql \
+	db/009_create_ride.sql \
+	db/010_create_driver_rating.sql \
+	db/011_create_passenger_rating.sql \
+	db/012_update_driver_rating.sql \
+	db/013_update_passenger_rating.sql
 
 SEED_SQL := seeds/dev_seed.sql
 
