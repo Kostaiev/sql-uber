@@ -1,0 +1,6 @@
+ALTER TABLE ride
+    MODIFY COLUMN pickup_house_id BIGINT UNSIGNED NULL,
+    MODIFY COLUMN dropoff_house_id BIGINT UNSIGNED NULL,
+
+    ADD COLUMN pickup_location POINT NULL SRID 4326,
+    ADD COLUMN dropoff_location POINT NULL SRID 4326;

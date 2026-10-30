@@ -24,12 +24,17 @@ erDiagram
     city ||--o{ street : contains
     street ||--o{ house : contains
 
+    street |o--o{ road_segment : names
+    intersection ||--o{ road_segment : cross1
+    intersection ||--o{ road_segment : cross2
+    road_segment |o--o{ house : access
+
     passenger ||--o{ ride : requests
     driver |o--o{ ride : performs
     operator |o--o{ ride : creates
 
-    house ||--o{ ride : pickup
-    house ||--o{ ride : dropoff
+    house |o--o{ ride : pickup
+    house |o--o{ ride : dropoff
 
     ride ||--o| driver_rating : has
     ride ||--o| passenger_rating : has
@@ -56,6 +61,25 @@ erDiagram
         BIGINT_UNSIGNED id PK
         INT_UNSIGNED street_id FK
         VARCHAR_20 house_number
+        POINT location
+        POINT access_point
+        INT_UNSIGNED road_segment_id FK
+    }
+
+    intersection {
+        INT_UNSIGNED id PK
+        POINT location
+    }
+
+    road_segment {
+        INT_UNSIGNED id PK
+        INT_UNSIGNED street_id FK
+        INT_UNSIGNED cross1_id FK
+        INT_UNSIGNED cross2_id FK
+        LINESTRING path
+        INT_UNSIGNED distance_m
+        ENUM structure_type
+        BOOLEAN drivable
     }
 
     passenger {
@@ -95,6 +119,8 @@ erDiagram
         BIGINT_UNSIGNED operator_id FK
         BIGINT_UNSIGNED pickup_house_id FK
         BIGINT_UNSIGNED dropoff_house_id FK
+        POINT pickup_location
+        POINT dropoff_location
         DECIMAL fare_amount
         BOOLEAN paid
         BOOLEAN completed
@@ -120,26 +146,26 @@ erDiagram
 ## Relationships
 
 - region → city → street → house: One-to-Many.
-- passenger → ride: One-to-Many.
-- driver → ride: One-to-Many (driver optional).
-- operator → ride: One-to-Many (operator optional).
-- house → ride: One-to-Many for pickup and dropoff.
+- intersection → road_segment: One-to-Many per endpoint.
+- street → road_segment: One-to-Many (optional).
+- road_segment → house: One-to-Many (optional access).
+- passenger / driver / operator → ride: One-to-Many.
+- house → ride: One-to-Many (optional pickup/dropoff).
 - ride → driver_rating / passenger_rating: One-to-Zero-or-One.
 - Foreign keys use RESTRICT for DELETE and UPDATE.
 
 ## Business Rules
 
 - Regions include oblasts and special-status cities.
-- Names are unique within their parent region or city; house numbers within a street.
-- Every child address entity requires a parent.
-- drivable indicates car accessibility.
-- Passenger and driver phones are required, unique within their respective tables, and E.164-formatted; emails are optional and unique when provided.
-- Each ride requires a passenger, pickup and dropoff addresses.
-- Driver and operator assignments are optional; completed rides require a driver.
-- Rides must be paid before they can be marked as completed.
-- Ratings range from 1 to 5; each ride permits one rating per direction.
--Ratings belong to completed rides and are submitted by the opposite party.
-- Passenger and driver average ratings are cached from their rating tables; unrated users have NULL averages.
+- Names are unique within their parent; house numbers within a street.
+- Address entities require their parent.
+- Road segments connect different intersections and have positive distances.
+- Segments may be roads, bridges, or tunnels; routing respects drivable.
+- Houses may store location and road-access coordinates.
+- Every ride requires pickup and dropoff coordinates; house references are optional.
+- Completed rides require an assigned driver and payment.
+- Ratings are 1–5, one per direction per ride; averages are cached.
+- River-crossing routes use exactly one designated bridge.
 
 ## Quick start
 
